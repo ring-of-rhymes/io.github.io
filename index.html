@@ -2,15 +2,62 @@
 <head>
     <title>Год кругл</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
     <style type="text/css">
-        body {
+        body, pre {
             background-color: black;
             color: gray;
-            font-family: monospace;
+            font-family: 'Amatic SC', cursive;
+        }
+        pre {
+            display: inline-block;
+            margin:20px;
+            vertical-align: top;
+        }
+
+        #main {
+            width: 80%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top:20px;
         }
     </style>
+    <script type="text/javascript" src="poems.js"></script>
+    <script type="text/javascript">
+        function doIt() {
+            var s1 = ' style="color: white; font-size:200%;"';
+            var s2 = ' style="color: #666666; font-size:90%;"';
+            var s3 = ' style="color: #333333; font-size:40%;"';
+            var now = new Date();
+            var diff = now - new Date(now.getFullYear(), 0, 0);
+            var d = Math.floor(Math.random() * 365);//Math.floor(diff / (1000 * 60 * 60 * 24));
+            var i;
+            for (i = 0; i < days.length; i++) {
+             if (days[i] >= d) {
+                var prev = i - 1;
+                if (prev < 0) prev = poems.length-1;
+                var prevprev = prev - 1;
+                if (prevprev < 0) prevprev = poems.length - 1;
+                var next = i + 1;
+                if (next > poems.length - 1) next = 0;
+                var nextnext = next+1;
+                if (nextnext > poems.length-1) nextnext = 0;
+                var s = "";
+                s += "<pre"+s3+">"+poems[prevprev]+"</pre>";
+                s += "<pre"+s2+">"+poems[prev]+"</pre>";
+                s += "<pre"+s1+">"+poems[i]+"</pre>";
+                s += "<pre"+s2+">"+poems[next]+"</pre>";
+                s += "<pre"+s3+">"+poems[nextnext]+"</pre>";
+                document.getElementById("main").innerHTML = "<nobr>"+ s + "</nobr>";
+                break;
+             }
+           }
+        }
+    </script>
 </head>
 <body>
-Year is round as a ring
+<div id="main"></div>
+<script type="text/javascript">doIt();</script>
 </body>
 </html>

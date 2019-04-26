@@ -1,18 +1,32 @@
 <html>
 <head>
-    <title>Год кругл</title>
+    <title>Разные года одной жизни</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
     <style type="text/css">
         body, pre {
             background-color: black;
-            color: gray;
+            color: white;
             font-family: 'Amatic SC', cursive;
         }
+
         pre {
             display: inline-block;
-            margin:20px;
+            margin: 20px;
             vertical-align: top;
+            font-size: 200%;
+        }
+
+        pre.small {
+            color: #666666;
+            font-size: 90%;
+            cursor: pointer;
+        }
+
+        pre.mini {
+            color: #333333;
+            font-size: 40%;
+            cursor: pointer;
         }
 
         #main {
@@ -20,44 +34,48 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            margin-top:20px;
+            margin-top: 20px;
         }
     </style>
     <script type="text/javascript" src="poems.js"></script>
     <script type="text/javascript">
-        function doIt() {
-            var s1 = ' style="color: white; font-size:200%;"';
-            var s2 = ' style="color: #666666; font-size:90%;"';
-            var s3 = ' style="color: #333333; font-size:40%;"';
+        function getTodayIndex() {
             var now = new Date();
             var diff = now - new Date(now.getFullYear(), 0, 0);
-            var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            var today = Math.floor(diff / (1000 * 60 * 60 * 24));
             var i;
             for (i = 0; i < days.length; i++) {
-             if (days[i] >= d) {
-                var prev = i - 1;
-                if (prev < 0) prev = poems.length-1;
-                var prevprev = prev - 1;
-                if (prevprev < 0) prevprev = poems.length - 1;
-                var next = i + 1;
-                if (next > poems.length - 1) next = 0;
-                var nextnext = next+1;
-                if (nextnext > poems.length-1) nextnext = 0;
-                var s = "";
-                s += "<pre"+s3+">"+poems[prevprev]+"</pre>";
-                s += "<pre"+s2+">"+poems[prev]+"</pre>";
-                s += "<pre"+s1+">"+poems[i]+"</pre>";
-                s += "<pre"+s2+">"+poems[next]+"</pre>";
-                s += "<pre"+s3+">"+poems[nextnext]+"</pre>";
-                document.getElementById("main").innerHTML = "<nobr>"+ s + "</nobr>";
-                break;
-             }
-           }
+                if (days[i] >= today) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        function checkBounds(i) {
+            if (i < 0) return poems.length - 1;
+            if (i > poems.length - 1) return 0;
+            return i;
+        }
+
+        function doIt(i) {
+            var minus1 = checkBounds(i - 1);
+            var minus2 = checkBounds(minus1 - 1);
+            var plus1 = checkBounds(i + 1);
+            var plus2 = checkBounds(plus1 + 1);
+            var s = '<nobr>';
+            s += '<pre onclick="doIt(' + minus2 + ');" class="mini">' + poems[minus2] + '</pre>';
+            s += '<pre onclick="doIt(' + minus1 + ');" class="small">' + poems[minus1] + '</pre>';
+            s += '<pre>' + poems[i] + '</pre>';
+            s += '<pre onclick="doIt(' + plus1 + ');" class="small">' + poems[plus1] + '</pre>';
+            s += '<pre onclick="doIt(' + plus2 + ');" class="mini">' + poems[plus2] + '</pre>';
+            s += '</nobr>';
+            document.getElementById("main").innerHTML = s;
         }
     </script>
 </head>
 <body>
 <div id="main"></div>
-<script type="text/javascript">doIt();</script>
+<script type="text/javascript">doIt(getTodayIndex());</script>
 </body>
 </html>

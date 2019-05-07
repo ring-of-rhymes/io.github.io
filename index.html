@@ -1,44 +1,72 @@
-<html>
+<html lang="ru">
 <head>
     <title>Разные года одной жизни. Книга стихов.</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
     <style type="text/css">
-        body, pre {
-            background-color: black;
-            color: white;
+        body {
+            background-color: white;
+            color: black;
+            margin: 0;
             font-family: 'Amatic SC', cursive;
-        }
-
-        pre {
-            display: inline-block;
-            margin: 20px;
-            vertical-align: top;
-            font-size: 200%;
-        }
-
-        pre.small {
-            color: #666666;
-            font-size: 90%;
-            cursor: pointer;
-        }
-
-        pre.mini {
-            color: #333333;
-            font-size: 40%;
-            cursor: pointer;
+            white-space: nowrap;
         }
 
         #main {
-            width: 80%;
+            position: absolute;
+            width: 30%;
+            padding-top: 5%;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 20px;
+            margin-left: 35%;
+            margin-right: 35%;
+            font-size: 200%;
+            color: rgba(0, 0, 0, 0);
+            text-shadow: 0 0 0 black;
+            user-select: none;
+        }
+
+        .navigation {
+            padding: 5%;
+            width: 25%;
+            height: 100%;
+            user-select: none;
+            position: fixed;
+            font-size: 1000%;
+            cursor: pointer;
+            line-height: 70%;
+            color: rgba(0, 0, 0, 0);
+            text-shadow: 0 0 0 black;
+        }
+
+
+        div#n_left {
+            left: 0;
+        }
+
+        div#n_right {
+            right: 0;
+            text-align: right;
         }
     </style>
     <script type="text/javascript" src="poems.js"></script>
     <script type="text/javascript">
+        var lefts = "←↜↞↢↤⇇⇐⇚⇜⇠⇦⇽⤌⤎⤺⥀";
+        var rights = "→➔➙➛➜➝➞➟➠➡↝↠↣⇒⇛⇝⇢⇨⇰⇴⇾⟴⟿⤍⤏⤑⤳⤻⥁➧➨➸➼➽➾";
+        var id = 0;
+        var index = getTodayIndex();
+        var pageDirection = 1;
+        var linearProgress = 1;
+        var progressDirection = -1;
+
+        function replaceAll(s, p, r) {
+            var tmp = s;
+            do {
+                s = tmp;
+                tmp = s.replace(p, r);
+            } while (!(tmp === s));
+            return tmp;
+        }
+
         function getTodayIndex() {
             var now = new Date();
             var diff = now - new Date(now.getFullYear(), 0, 0);
@@ -52,30 +80,48 @@
             return 0;
         }
 
-        function checkBounds(i) {
-            if (i < 0) return poems.length - 1;
-            if (i > poems.length - 1) return 0;
-            return i;
+        function doStep() {
+            linearProgress += .15 * progressDirection;
+            if (linearProgress > 1) {
+                progressDirection = -1;
+                linearProgress = 1;
+                if (id !== 0) window.clearInterval(id);
+            }
+            if (linearProgress < 0) {
+                progressDirection = 1;
+                linearProgress = 0;
+                index += pageDirection;
+
+                document.getElementById("n_left").innerHTML = lefts.charAt(Math.round(Math.random() * (lefts.length - 1)));
+                document.getElementById("n_right").innerHTML = rights.charAt(Math.round(Math.random() * (rights.length - 1)));
+                if (index > poems.length - 1) index = 0;
+                if (index < 0) index = poems.length - 1;
+            }
+            repaint();
         }
 
-        function doIt(i) {
-            var minus1 = checkBounds(i - 1);
-            var minus2 = checkBounds(minus1 - 1);
-            var plus1 = checkBounds(i + 1);
-            var plus2 = checkBounds(plus1 + 1);
-            var s = '<nobr>';
-            s += '<pre onclick="doIt(' + minus2 + ');" class="mini">' + poems[minus2] + '</pre>';
-            s += '<pre onclick="doIt(' + minus1 + ');" class="small">' + poems[minus1] + '</pre>';
-            s += '<pre>' + poems[i] + '</pre>';
-            s += '<pre onclick="doIt(' + plus1 + ');" class="small">' + poems[plus1] + '</pre>';
-            s += '<pre onclick="doIt(' + plus2 + ');" class="mini">' + poems[plus2] + '</pre>';
-            s += '</nobr>';
-            document.getElementById("main").innerHTML = s;
+        function repaint() {
+            var naturalProgress = (1 - Math.cos(linearProgress * Math.PI)) / 2;
+            var style = "text-shadow: 0px 0px " + (1.0 - naturalProgress) * 25 + "px rgba(0, 0, 0, " + naturalProgress + ");";
+            document.getElementById("main").innerHTML = '<div style="' + style + '">' + replaceAll(poems[index], "\n", "<br>") + '</div>';
+            if (linearProgress !== 1) {
+                document.getElementById("n_left").style = style;
+                document.getElementById("n_right").style = style;
+            }
+        }
+
+        function showNext(dir) {
+            if (linearProgress !== 1) return;
+            pageDirection = dir;
+            repaint();
+            id = window.setInterval(doStep, 40);
         }
     </script>
 </head>
 <body>
+<div class="navigation" id="n_left" onClick="showNext(-1)">&#11064;</div>
 <div id="main"></div>
-<script type="text/javascript">doIt(getTodayIndex());</script>
+<div class="navigation" id="n_right" onClick="showNext(1)">&#10513;</div>
+<script type="text/javascript">repaint();</script>
 </body>
 </html>

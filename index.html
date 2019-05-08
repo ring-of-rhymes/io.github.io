@@ -13,8 +13,8 @@
         }
 
         #main {
-            position: fixed;
-            left:50%;
+            position: absolute;
+            left: 50%;
             transform: translateX(-50%);
             padding-top: 5%;
             display: block;
@@ -22,29 +22,32 @@
             color: rgba(0, 0, 0, 0);
             text-shadow: 0 0 0 black;
             user-select: none;
+
         }
 
         .navigation {
-            padding-top: 5%;
             width: 25%;
             height: 100%;
             user-select: none;
             position: fixed;
-            font-size: 400%;
+            font-size: 200%;
             cursor: pointer;
             line-height: 70%;
             color: rgba(0, 0, 0, 0);
             text-shadow: 0 0 0 black;
-            text-align: center;
         }
 
 
         div#n_left {
+            padding: .5em 0 0 .5em;
             left: 0;
+            text-align: left;
         }
 
         div#n_right {
+            padding: .5em .5em 0 0;
             right: 0;
+            text-align: right;
         }
     </style>
     <script type="text/javascript" src="poems.js"></script>
@@ -113,12 +116,17 @@
             repaint();
             id = window.setInterval(doStep, 40);
         }
+
+        function navigate(keyCode) {
+            if (keyCode === 37) showNext(-1);
+            if (keyCode === 39) showNext(1);
+        }
     </script>
 </head>
-<body>
-<div class="navigation" id="n_left" onClick="showNext(-1)">←</div>
+<body onkeydown="navigate(event.keyCode);">
+<div class="navigation" id="n_left" onClick="showNext(-1)">◀</div>
 <div id="main"></div>
-<div class="navigation" id="n_right" onClick="showNext(1)">→</div>
+<div class="navigation" id="n_right" onClick="showNext(1)">▶</div>
 <script type="text/javascript">repaint();</script>
 </body>
 </html>

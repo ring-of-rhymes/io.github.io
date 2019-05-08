@@ -2,23 +2,22 @@
 <head>
     <title>Разные года одной жизни. Книга стихов.</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
     <style type="text/css">
         body {
             background-color: white;
             color: black;
             margin: 0;
-            font-family: 'Amatic SC', cursive;
+            font-family: 'Open Sans Condensed', sans-serif;
             white-space: nowrap;
         }
 
         #main {
-            position: absolute;
-            width: 30%;
+            position: fixed;
+            left:50%;
+            transform: translateX(-50%);
             padding-top: 5%;
             display: block;
-            margin-left: 35%;
-            margin-right: 35%;
             font-size: 200%;
             color: rgba(0, 0, 0, 0);
             text-shadow: 0 0 0 black;
@@ -92,8 +91,6 @@
                 linearProgress = 0;
                 index += pageDirection;
 
-                // document.getElementById("n_left").innerHTML = lefts.charAt(Math.round(Math.random() * (lefts.length - 1)));
-                // document.getElementById("n_right").innerHTML = rights.charAt(Math.round(Math.random() * (rights.length - 1)));
                 document.getElementById("n_left").innerHTML = lefts.charAt(index % lefts.length);
                 document.getElementById("n_right").innerHTML = rights.charAt((index+1) %rights.length);
                 if (index > poems.length - 1) index = 0;
@@ -105,12 +102,14 @@
         function repaint() {
             var naturalProgress = (1 - Math.cos(linearProgress * Math.PI)) / 2;
             var style = "text-shadow: 0px 0px " + (1.0 - naturalProgress) * 25 + "px rgba(0, 0, 0, " + naturalProgress + ");";
-            document.getElementById("main").innerHTML = '<div style="' + style + '">' + replaceAll(poems[index], "\n", "<br>") + '</div>';
             if (linearProgress !== 1) {
                 document.getElementById("n_left").style = style;
                 document.getElementById("n_right").style = style;
             }
+            document.getElementById("main").style = style;
+            document.getElementById("main").innerHTML = replaceAll(poems[index], "\n", "<br>");
         }
+        
         function init() {
             document.getElementById("n_left").innerHTML = lefts.charAt(index % lefts.length);
             document.getElementById("n_right").innerHTML = rights.charAt((index+1) % rights.length);

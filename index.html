@@ -88,6 +88,7 @@
                 if (id !== 0) window.clearInterval(id);
             }
             if (linearProgress < 0) {
+                window.scrollTo(window.screenX, 0);
                 progressDirection = 1;
                 linearProgress = 0;
                 index += pageDirection;

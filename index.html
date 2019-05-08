@@ -50,8 +50,8 @@
     </style>
     <script type="text/javascript" src="poems.js"></script>
     <script type="text/javascript">
-        var lefts = "←↜↞↢↤⇇⇐⇚⇜⇠⇦⇽⤌⤎⤺⥀";
-        var rights = "→➔➙➛➜➝➞➟➠➡↝↠↣⇒⇛⇝⇢⇨⇰⇴⇾⟴⟿⤍⤏⤑⤳⤻⥁➧➨➸➼➽➾";
+        var lefts =  "\u2b38←↜↞↢⇐⇜⇠⇚⤌⥀⤺⤎⇦⇽";
+        var rights = "\u2911→↝↠↣⇒⇝⇢⇛⤍⥁⤻⤏⇨⇾";
         var id = 0;
         var index = getTodayIndex();
         var pageDirection = 1;
@@ -92,8 +92,10 @@
                 linearProgress = 0;
                 index += pageDirection;
 
-                document.getElementById("n_left").innerHTML = lefts.charAt(Math.round(Math.random() * (lefts.length - 1)));
-                document.getElementById("n_right").innerHTML = rights.charAt(Math.round(Math.random() * (rights.length - 1)));
+                // document.getElementById("n_left").innerHTML = lefts.charAt(Math.round(Math.random() * (lefts.length - 1)));
+                // document.getElementById("n_right").innerHTML = rights.charAt(Math.round(Math.random() * (rights.length - 1)));
+                document.getElementById("n_left").innerHTML = lefts.charAt(index % lefts.length);
+                document.getElementById("n_right").innerHTML = rights.charAt((index+1) %rights.length);
                 if (index > poems.length - 1) index = 0;
                 if (index < 0) index = poems.length - 1;
             }
@@ -109,6 +111,11 @@
                 document.getElementById("n_right").style = style;
             }
         }
+        function init() {
+            document.getElementById("n_left").innerHTML = lefts.charAt(index % lefts.length);
+            document.getElementById("n_right").innerHTML = rights.charAt((index+1) % rights.length);
+            repaint();
+        }
 
         function showNext(dir) {
             if (linearProgress !== 1) return;
@@ -119,9 +126,9 @@
     </script>
 </head>
 <body>
-<div class="navigation" id="n_left" onClick="showNext(-1)">&#11064;</div>
+<div class="navigation" id="n_left" onClick="showNext(-1)"></div>
 <div id="main"></div>
-<div class="navigation" id="n_right" onClick="showNext(1)">&#10513;</div>
-<script type="text/javascript">repaint();</script>
+<div class="navigation" id="n_right" onClick="showNext(1)"></div>
+<script type="text/javascript">init();</script>
 </body>
 </html>

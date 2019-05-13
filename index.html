@@ -55,6 +55,7 @@
         var pageDirection = 1;
         var linearProgress = 1;
         var progressDirection = -1;
+        var isShift = false;
 
         function replaceAll(s, p, r) {
             var tmp = s;
@@ -79,7 +80,7 @@
         }
 
         function doStep() {
-            linearProgress += .15 * progressDirection;
+            linearProgress += (isShift ? 0.015 : .15) * progressDirection;
             if (linearProgress > 1) {
                 progressDirection = -1;
                 linearProgress = 1;
@@ -109,23 +110,24 @@
         }
 
 
-        function showNext(dir) {
+        function showNext(dir, shiftKey) {
+            isShift = shiftKey;
             if (linearProgress !== 1) return;
             pageDirection = dir;
             repaint();
             id = window.setInterval(doStep, 40);
         }
 
-        function navigate(keyCode) {
-            if (keyCode === 37) showNext(-1);
-            if (keyCode === 39) showNext(1);
+        function navigate(keyCode, shiftKey) {
+            if (keyCode === 37) showNext(-1, shiftKey);
+            if (keyCode === 39) showNext(1, shiftKey);
         }
     </script>
 </head>
-<body onkeydown="navigate(event.keyCode);">
-<div class="navigation" id="n_left" onClick="showNext(-1)">←</div>
+<body onkeydown="navigate(event.keyCode, event.shiftKey);">
+<div class="navigation" id="n_left" onClick="showNext(-1, event.shiftKey)">←</div>
 <div id="main"></div>
-<div class="navigation" id="n_right" onClick="showNext(1)">→</div>
+<div class="navigation" id="n_right" onClick="showNext(1 ,event.shiftKey)">→</div>
 <script type="text/javascript">repaint();</script>
 </body>
 </html>
